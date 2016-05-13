@@ -52,7 +52,7 @@ public class JustWeatherDB {
             //使用ContentValue组装省份表的数据，储存到表中
             ContentValues values = new ContentValues();
             values.put("province_name",province.getProvinceName());
-            values.put("province_code",province.getProvinceCode());
+//            values.put("province_code",province.getProvinceCode());
             db.insert("Province",null,values);
         }
     }
@@ -60,7 +60,7 @@ public class JustWeatherDB {
     /**从数据库中读取全国所有的省份信息*/
     public List<Province> loadProvinces(){
         List<Province> list = new ArrayList<>();
-        
+
         //需要遍历全表，所以查找命令只传入表名就好
         Cursor cursor = db.query("Province",null,null,null,null,null,null);
         //必须执行cursor.moveToFirst()，否则cursor不会进入表中，会返回空
@@ -70,7 +70,7 @@ public class JustWeatherDB {
                 Province province = new Province();
                 province.setId(cursor.getInt(cursor.getColumnIndex("id")));
                 province.setProvinceName(cursor.getString(cursor.getColumnIndex("province_name")));
-                province.setProvinceCode(cursor.getString(cursor.getColumnIndex("province_code")));
+//                province.setProvinceCode(cursor.getString(cursor.getColumnIndex("province_code")));
                 //把组装好的省份实例添加到List当中
                 list.add(province);
             }while(cursor.moveToNext());
@@ -85,16 +85,17 @@ public class JustWeatherDB {
             ContentValues values = new ContentValues();
             values.put("city_name",city.getCityName());
             values.put("city_code",city.getCityCode());
+            values.put("province_name",city.getProvinceName());
             db.insert("City",null,values);
         }
     }
 
     /**从数据库中读取某省份所有的城市信息*/
-    public List<City> loadCities(int provinceId){
+    public List<City> loadCities(String provinceName){
         List<City> list = new ArrayList<>();
 
         //需要限定查找某一省份的城市
-        Cursor cursor = db.query("City",null,"province_id = ?",new String[]{String.valueOf(provinceId)},null,null,null);
+        Cursor cursor = db.query("City",null,"province_name = ?",new String[]{String.valueOf(provinceName)},null,null,null);
         //必须执行cursor.moveToFirst()，否则cursor不会进入表中，会返回空
         if (cursor.moveToFirst()){
             do{
@@ -110,35 +111,35 @@ public class JustWeatherDB {
         return list;
     }
 
-    /**把County实例储存到数据库*/
-    public void saveCounty(County county){
-        if (county!=null){
-            //使用ContentValue组装省份表的数据，储存到表中
-            ContentValues values = new ContentValues();
-            values.put("county_name",county.getCountyName());
-            values.put("county_code",county.getCountyCode());
-            db.insert("County",null,values);
-        }
-    }
-
-    /**从数据库中读取某城市所有县城的信息*/
-    public List<County> loadCounty(int cityId){
-        List<County> list = new ArrayList<>();
-
-        //需要限定查找某一城市的县城
-        Cursor cursor = db.query("County",null,"city_id = ?",new String[]{String.valueOf(cityId)},null,null,null);
-        //必须执行cursor.moveToFirst()，否则cursor不会进入表中，会返回空
-        if (cursor.moveToFirst()){
-            do{
-                //使用表中的数据组装N个县城的实例对象
-                County county = new County();
-                county.setId(cursor.getInt(cursor.getColumnIndex("id")));
-                county.setCountyName(cursor.getString(cursor.getColumnIndex("county_name")));
-                county.setCountyCode(cursor.getString(cursor.getColumnIndex("county_code")));
-                //把组装好的县城实例添加到List当中
-                list.add(county);
-            }while(cursor.moveToNext());
-        }
-        return list;
-    }
+//    /**把County实例储存到数据库*/
+//    public void saveCounty(County county){
+//        if (county!=null){
+//            //使用ContentValue组装省份表的数据，储存到表中
+//            ContentValues values = new ContentValues();
+//            values.put("county_name",county.getCountyName());
+//            values.put("county_code",county.getCountyCode());
+//            db.insert("County",null,values);
+//        }
+//    }
+//
+//    /**从数据库中读取某城市所有县城的信息*/
+//    public List<County> loadCounty(int cityId){
+//        List<County> list = new ArrayList<>();
+//
+//        //需要限定查找某一城市的县城
+//        Cursor cursor = db.query("County",null,"city_id = ?",new String[]{String.valueOf(cityId)},null,null,null);
+//        //必须执行cursor.moveToFirst()，否则cursor不会进入表中，会返回空
+//        if (cursor.moveToFirst()){
+//            do{
+//                //使用表中的数据组装N个县城的实例对象
+//                County county = new County();
+//                county.setId(cursor.getInt(cursor.getColumnIndex("id")));
+//                county.setCountyName(cursor.getString(cursor.getColumnIndex("county_name")));
+//                county.setCountyCode(cursor.getString(cursor.getColumnIndex("county_code")));
+//                //把组装好的县城实例添加到List当中
+//                list.add(county);
+//            }while(cursor.moveToNext());
+//        }
+//        return list;
+//    }
 }

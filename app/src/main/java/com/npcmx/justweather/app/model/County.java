@@ -3,6 +3,11 @@ package com.npcmx.justweather.app.model;
 /**
  * Created by CMX on 2016/5/13.
  */
+
+/**
+ * 由于天气api接口数据中县城与城市属于同级别City，所以此类不再使用
+ */
+
 public class County {
     private int id;
     private String countyName;

@@ -3,10 +3,12 @@ package com.npcmx.justweather.app.model;
 /**
  * Created by CMX on 2016/5/13.
  */
+
+
 public class Province {
     private int id;
     private String provinceName;
-    private String provinceCode;
+//    private String provinceCode;
 
     public int getId(){
         return id;
@@ -24,11 +26,11 @@ public class Province {
         this.provinceName = provinceName;
     }
 
-    public String getProvinceCode(){
-        return  provinceCode;
-    }
-
-    public void setProvinceCode(String provinceCode){
-        this.provinceCode = provinceCode;
-    }
+//    public String getProvinceCode(){
+//        return  provinceCode;
+//    }
+//
+//    public void setProvinceCode(String provinceCode){
+//        this.provinceCode = provinceCode;
+//    }
 }

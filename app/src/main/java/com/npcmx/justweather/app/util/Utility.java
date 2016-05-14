@@ -1,24 +1,23 @@
 package com.npcmx.justweather.app.util;
 
-//import com.google.gson.Gson;
-//import com.google.gson.reflect.TypeToken;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.alibaba.fastjson.JSON;
 import com.npcmx.justweather.app.db.JustWeatherDB;
 import com.npcmx.justweather.app.model.City;
 import com.npcmx.justweather.app.model.Province;
 
 import org.json.JSONArray;
-//import org.json.JSONException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-//import java.util.List;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -29,18 +28,22 @@ public class Utility {
 
     /**
      * 处理服务器返回的城市数据（实测耗时过久）
+     * 使用android自带的JsonObject时速度非常慢！十分慢！
+     * 使用fastJson的普通解析时，速度得到明显提升但是依旧需要等待很久
+     * 下次试着使用fastJson的其他解析手段
      * */
+
+
     public synchronized static boolean handleCityListResponse(JustWeatherDB justWeatherDB,String response) {
         if (response != null) {
             try {
-                JSONObject jsonObject1 = new JSONObject(response);
-                JSONArray jsonArray = jsonObject1.getJSONArray("city_info");
+                Pakage pakage = JSON.parseObject(response,Pakage.class);
+                List<Pakage.City_Info> cityInfos = pakage.getCity_info();
                 Set<String> set = new HashSet<>();
-                for (int i = 0; i <= jsonArray.length(); i++) {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    String id = jsonObject.getString("id");
-                    String cityName = jsonObject.getString("city");
-                    String provName = jsonObject.getString("prov");
+                for (Pakage.City_Info cityInfo:cityInfos) {
+                    String id = cityInfo.getId();
+                    String cityName = cityInfo.getCity();
+                    String provName = cityInfo.getProv();
                     Province province = new Province();
                     City city = new City();
                     if (!set.contains(provName)) {
@@ -60,6 +63,39 @@ public class Utility {
         }
         return false;
     }
+
+
+//    public synchronized static boolean handleCityListResponse(JustWeatherDB justWeatherDB,String response) {
+//        if (response != null) {
+//            try {
+//
+//                JSONObject jsonObject1 = new JSONObject(response);
+//                JSONArray jsonArray = jsonObject1.getJSONArray("city_info");
+//                Set<String> set = new HashSet<>();
+//                for (int i = 0; i <= jsonArray.length(); i++) {
+//                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+//                    String id = jsonObject.getString("id");
+//                    String cityName = jsonObject.getString("city");
+//                    String provName = jsonObject.getString("prov");
+//                    Province province = new Province();
+//                    City city = new City();
+//                    if (!set.contains(provName)) {
+//                        province.setProvinceName(provName);
+//                        set.add(provName);
+//                        justWeatherDB.saveProvince(province);
+//                    }
+//                    city.setCityCode(id);
+//                    city.setCityName(cityName);
+//                    city.setProvinceName(provName);
+//                    justWeatherDB.saveCity(city);
+//            }
+//               return true;
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        return false;
+//    }
 
     /**
      * 解析服务器返回的天气JSON数据，并保存到本地
@@ -105,72 +141,90 @@ public class Utility {
         editor.putString("current_date",sdf.format(new Date()));
         editor.commit();
     }
+}
 
+class Pakage{
 
+    private List<City_Info> city_info = new ArrayList<>();
+    private String status;
 
-/**
- * 尝试使用Gson解析，解析时间依旧太久
- * */
-//    Set<String> set = new HashSet<>();
-//                Gson gson = new Gson();
-//                JsonBean jsonBean = gson.fromJson(response,JsonBean.class);
-//                List<Info> infoList = jsonBean.getCity_info();
-//                for (Info data:infoList){
-//                    City city = new City();
-//                    Province province = new Province();
-//                    if (!set.contains(data.getProv())){
-//                        province.setProvinceName(data.getProv());
-//                        justWeatherDB.saveProvince(province);
-//                        set.add(data.getProv());
-//                    }
-//                    city.setCityName(data.getCity());
-//                    city.setProvinceName(data.getProv());
-//                    city.setCityCode(data.getId());
-//                    justWeatherDB.saveCity(city);
-//                }
-//                List<myData> dataList = gson.fromJson(response,new TypeToken<List<Data>>(){}.getType());
-//                for (myData data:dataList){
-//                    City city = new City();
-//                    Province province = new Province();
-//                    if (!set.contains(data.getProv())){
-//                        province.setProvinceName(data.getProv());
-//                        justWeatherDB.saveProvince(province);
-//                    }
-//                    set.add(data.getProv());
-//                    city.setCityName(data.getCity());
-//                    city.setProvinceName(data.getProv());
-//                    city.setCityCode(data.getId());
-//                    justWeatherDB.saveCity(city);
-//                }
-//    class JsonBean{
-//       private List<Info> city_info;
-//        public List<Info> getCity_info(){
-//            return city_info;
-//        }
-//    }
-//
-//    class Info{
-//        private String id;
-//        private String city;
-//        private String prov;
-//
-//        public String getId(){
-//            return id;
-//        }
-//        public void setId(String id){
-//            this.id = id;
-//        }
-//        public String getCity(){
-//            return city;
-//        }
-//        public void setCity(String city){
-//            this.city = city;
-//        }
-//        public String getProv(){
-//            return prov;
-//        }
-//        public void setProv(String prov){
-//            this.prov = prov;
-//        }
-
+    public List<City_Info> getCity_info() {
+        return city_info;
     }
+
+    public void setCity_info(List<City_Info> city_info) {
+        this.city_info = city_info;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void addCityInfo(City_Info cityInfo){
+        city_info.add(cityInfo);
+    }
+
+    class City_Info {
+
+        private String city;
+        private String cnty;
+        private String id;
+        private String lat;
+        private String lon;
+        private String prov;
+
+        public String getCity() {
+            return city;
+        }
+
+        public void setCity(String city) {
+            this.city = city;
+        }
+
+        public String getCnty() {
+            return cnty;
+        }
+
+        public void setCnty(String cnty) {
+            this.cnty = cnty;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getLat() {
+            return lat;
+        }
+
+        public void setLat(String lat) {
+            this.lat = lat;
+        }
+
+        public String getLon() {
+            return lon;
+        }
+
+        public void setLon(String lon) {
+            this.lon = lon;
+        }
+
+        public String getProv() {
+            return prov;
+        }
+
+        public void setProv(String prov) {
+            this.prov = prov;
+        }
+    }
+}
+
+

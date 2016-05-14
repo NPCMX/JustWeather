@@ -36,20 +36,6 @@ public class HttpUtil {
                         listener.onFinish(response.toString());
                     }
 
-                    //和风天气api使用示例
-                    /* URL url = new URL(httpUrl);
-                       HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                       connection.setRequestMethod("GET");
-                       // 填入apikey到HTTP header
-                       connection.setRequestProperty("apikey",  "您自己的apikey");
-                       connection.connect();
-                       InputStream is = connection.getInputStream();
-                       reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-                       String strRead = null;
-                       while ((strRead = reader.readLine()) != null) {
-                           sbf.append(strRead);
-                           sbf.append("\r\n");
-                       }*/
                 } catch (Exception e) {
                     if (listener!=null){
                         //回调onError方法

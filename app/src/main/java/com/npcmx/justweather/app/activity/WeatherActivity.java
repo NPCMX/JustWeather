@@ -1,6 +1,7 @@
 package com.npcmx.justweather.app.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -42,9 +43,12 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
         maxTempText = (TextView)findViewById(R.id.temp_max);
         minTempText = (TextView)findViewById(R.id.temp_min);
         currentDateText = (TextView)findViewById(R.id.current_date);
+        switchCity = (Button)findViewById(R.id.switch_city);
+        refreshWeather = (Button)findViewById(R.id.refresh_weather);
+        switchCity.setOnClickListener(this);
+        refreshWeather.setOnClickListener(this);
+
         String cityCode = getIntent().getStringExtra("city_code");
-//        String a = cityCode;
-//        String b = cityCode;
         if (!TextUtils.isEmpty(cityCode)){
             //有城市代号就去查询天气
             publishText.setText("正在同步天气");
@@ -59,6 +63,20 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+            case R.id.switch_city:
+                Intent intent = new Intent(this,ChooseAreaActivity.class);
+                intent.putExtra("from_weather_activity",true);
+                startActivity(intent);
+                finish();
+                break;
+            case R.id.refresh_weather:
+                publishText.setText("Refreshing...");
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                String cityCode = prefs.getString("city_code","");
+                queryWeatherCode(cityCode);
+                break;
+            default:
+                break;
 
         }
     }

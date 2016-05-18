@@ -34,7 +34,7 @@ public class AutoUpdateService extends Service {
             }
         }).start();
         AlarmManager manager = (AlarmManager)getSystemService(ALARM_SERVICE);
-        int anHour = 2*60*60*1000;//一小时的毫秒
+        int anHour = 8*60*60*1000;//一小时的毫秒
         long triggerAtTime = SystemClock.elapsedRealtime() + anHour;
         Intent i = new Intent(this,AutoUpdateReceiver.class);
         PendingIntent pi = PendingIntent.getBroadcast(this,0,i,0);
@@ -48,7 +48,7 @@ public class AutoUpdateService extends Service {
     private void updateWeather(){
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String cityCode = prefs.getString("city_code","");
-        String address = "https://api.heweather.com/x3/weather?cityid="+cityCode+"&key=4f8055b25db942269ed64b8ac49a79c0";;
+        String address = "https://api.heweather.com/x3/weather?cityid="+cityCode+"&key=4f8055b25db942269ed64b8ac49a79c0";
         HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {

@@ -105,19 +105,45 @@ public class Utility {
             //简直爆炸
             JSONArray jsonArray = new JSONObject(response).getJSONArray("HeWeather data service 3.0");
             JSONObject jsonObject = jsonArray.getJSONObject(0);
-            JSONObject jsonObjectCity = jsonObject.getJSONObject("basic");
-            JSONObject jsonObjectPublish = jsonObjectCity.getJSONObject("update");
+
             JSONArray jsonArrayDaily = jsonObject.getJSONArray("daily_forecast");
+
             JSONObject jsonObjecDate = jsonArrayDaily.getJSONObject(0);
+
             JSONObject jsonObjectDesp = jsonObjecDate.getJSONObject("cond");
+            String weatherDespDay = jsonObjectDesp.getString("txt_d");
+            String weatherDespNig = jsonObjectDesp.getString("txt_n");
+
             JSONObject jsonObjectTmp = jsonObjecDate.getJSONObject("tmp");
-            String cityName = jsonObjectCity.getString("city");
-            String weatherCode = jsonObjectCity.getString("id");
             String minTemp = jsonObjectTmp.getString("min");
             String maxTemp = jsonObjectTmp.getString("max");
-            String weatherDesp = jsonObjectDesp.getString("txt_d");
+
+            JSONObject jsonObjectCity = jsonObject.getJSONObject("basic");
+            String cityName = jsonObjectCity.getString("city");
+            String weatherCode = jsonObjectCity.getString("id");
+
+            JSONObject jsonObjectPublish = jsonObjectCity.getJSONObject("update");
             String publishTime = jsonObjectPublish.getString("loc");
-            saveWeatherInfo(context,cityName,weatherCode,minTemp,maxTemp,weatherDesp,publishTime);
+
+            JSONObject jsonObjectNow = jsonObject.getJSONObject("now");
+//            JSONObject jsonObjectNew = jsonObjectNow.getJSONObject("cond");
+            String nowTem = jsonObjectNow.getString("tmp");
+//            String nowFeel = jsonObjectNew.getString("fl");
+            String nowHum = jsonObjectNow.getString("hum");
+
+            JSONObject jsonObjectSug = jsonObject.getJSONObject("suggestion");
+            JSONObject jsonObjectSug1 = jsonObjectSug.getJSONObject("comf");
+            JSONObject jsonObjectSug2 = jsonObjectSug.getJSONObject("drsg");
+            JSONObject jsonObjectSug3 = jsonObjectSug.getJSONObject("uv");
+            String suggestion = "  今天天气"+jsonObjectSug1.getString("brf")
+                    +","+jsonObjectSug1.getString("txt")
+                    +","+jsonObjectSug2.getString("txt")
+                    +"\n\n    紫外线强度"+jsonObjectSug3.getString("brf")
+                    +","+jsonObjectSug3.getString("txt");
+
+            saveWeatherInfo(context,cityName,weatherCode,minTemp,maxTemp,weatherDespDay,weatherDespNig,
+                    publishTime,nowTem,nowHum,suggestion);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -127,7 +153,8 @@ public class Utility {
      * 将所有天气信息存储到SharePreferences文件中
      * */
     public static void saveWeatherInfo(Context context,String cityName,String weatherCode,String minTemp,
-                                       String maxTemp,String wetherDesp,String publishTime){
+                                       String maxTemp,String weatherDespDay,String weatherDespNig,String publishTime,
+                                        String nowTem,String nowHum,String suggestion){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日", Locale.CHINA);
 
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
@@ -136,9 +163,13 @@ public class Utility {
         editor.putString("city_code",weatherCode);
         editor.putString("minTemp",minTemp);
         editor.putString("maxTemp",maxTemp);
-        editor.putString("weather_desp",wetherDesp);
+        editor.putString("weather_desp_day",weatherDespDay);
+        editor.putString("weather_desp_night",weatherDespNig);
         editor.putString("publish_time",publishTime);
         editor.putString("current_date",sdf.format(new Date()));
+        editor.putString("now_temp",nowTem);
+        editor.putString("now_Hum",nowHum);
+        editor.putString("suggestion",suggestion);
         editor.commit();
     }
 }

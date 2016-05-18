@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -22,14 +23,20 @@ import com.npcmx.justweather.app.util.Utility;
  */
 public class WeatherActivity extends Activity implements View.OnClickListener {
     private LinearLayout weatherInfoLayout;
+    private LinearLayout weatherInfoLayout2;
+    private LinearLayout weatherInfoLayout3;
     private TextView cityNameText;
     private TextView publishText;
     private TextView weatherDespText;
     private TextView minTempText;
     private TextView maxTempText;
-    private TextView currentDateText;
+//    private TextView currentDateText;
+    private TextView nowTempText;
+    private TextView nowZiwaixText;
+    private TextView suggestionText;
     private Button switchCity;
     private Button refreshWeather;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +45,19 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
 
         //初始化控件
         weatherInfoLayout = (LinearLayout)findViewById(R.id.weather_info_layout);
+        weatherInfoLayout2 = (LinearLayout)findViewById(R.id.weather_info_layout_2);
+        weatherInfoLayout3 = (LinearLayout)findViewById(R.id.weather_info_layout_3);
         cityNameText = (TextView)findViewById(R.id.city_name);
         publishText = (TextView)findViewById(R.id.pulish_text);
         weatherDespText = (TextView)findViewById(R.id.weather_desp);
         maxTempText = (TextView)findViewById(R.id.temp_max);
         minTempText = (TextView)findViewById(R.id.temp_min);
-        currentDateText = (TextView)findViewById(R.id.current_date);
+//        currentDateText = (TextView)findViewById(R.id.current_date);
+        nowTempText = (TextView)findViewById(R.id.now_tem);
+        nowZiwaixText = (TextView)findViewById(R.id.now_ziwaix);
+        suggestionText = (TextView)findViewById(R.id.suggest_text_view);
+        suggestionText.setMovementMethod(ScrollingMovementMethod.getInstance());
+
         switchCity = (Button)findViewById(R.id.switch_city);
         refreshWeather = (Button)findViewById(R.id.refresh_weather);
         switchCity.setOnClickListener(this);
@@ -54,6 +68,8 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
             //有城市代号就去查询天气
             publishText.setText("正在同步天气");
             weatherInfoLayout.setVisibility(View.INVISIBLE);
+            weatherInfoLayout2.setVisibility(View.INVISIBLE);
+            weatherInfoLayout3.setVisibility(View.INVISIBLE);
             cityNameText.setVisibility(View.INVISIBLE);
             queryWeatherCode(cityCode);
         }else {
@@ -119,10 +135,16 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
         cityNameText.setText(prefs.getString("city_name",""));
         minTempText.setText(prefs.getString("minTemp","")+"℃");
         maxTempText.setText(prefs.getString("maxTemp","")+"℃");
-        weatherDespText.setText(prefs.getString("weather_desp",""));
-        currentDateText.setText(prefs.getString("current_date",""));
+        weatherDespText.setText(prefs.getString("weather_desp_day","")+"-"+prefs.getString("weather_desp_night",""));
+//        currentDateText.setText(prefs.getString("current_date",""));
         publishText.setText("今天"+prefs.getString("publish_time","")+"发布");
+        nowTempText.setText(prefs.getString("now_temp","")+"℃");
+        nowZiwaixText.setText(prefs.getString("now_Hum","")+"%");
+        suggestionText.setText("   "+prefs.getString("suggestion",""));
+
         weatherInfoLayout.setVisibility(View.VISIBLE);
+        weatherInfoLayout2.setVisibility(View.VISIBLE);
+        weatherInfoLayout3.setVisibility(View.VISIBLE);
         cityNameText.setVisibility(View.VISIBLE);
         Intent intent = new Intent(this, AutoUpdateService.class);
         startService(intent);

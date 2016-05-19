@@ -32,8 +32,10 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
     private TextView maxTempText;
 //    private TextView currentDateText;
     private TextView nowTempText;
-    private TextView nowZiwaixText;
+    private TextView nowWaterText;
     private TextView suggestionText;
+    private TextView airApiText;
+    private TextView airQltyText;
     private Button switchCity;
     private Button refreshWeather;
 
@@ -52,9 +54,10 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
         weatherDespText = (TextView)findViewById(R.id.weather_desp);
         maxTempText = (TextView)findViewById(R.id.temp_max);
         minTempText = (TextView)findViewById(R.id.temp_min);
-//        currentDateText = (TextView)findViewById(R.id.current_date);
+        airApiText = (TextView)findViewById(R.id.now_api);
+        airQltyText = (TextView)findViewById(R.id.now_qlty);
         nowTempText = (TextView)findViewById(R.id.now_tem);
-        nowZiwaixText = (TextView)findViewById(R.id.now_ziwaix);
+        nowWaterText = (TextView)findViewById(R.id.now_water);
         suggestionText = (TextView)findViewById(R.id.suggest_text_view);
         suggestionText.setMovementMethod(ScrollingMovementMethod.getInstance());
 
@@ -139,7 +142,9 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
 //        currentDateText.setText(prefs.getString("current_date",""));
         publishText.setText("今天"+prefs.getString("publish_time","")+"发布");
         nowTempText.setText(prefs.getString("now_temp","")+"℃");
-        nowZiwaixText.setText(prefs.getString("now_Hum","")+"%");
+        nowWaterText.setText(prefs.getString("now_Hum","")+"%");
+        airApiText.setText(prefs.getString("air_aqi",""));
+        airQltyText.setText(prefs.getString("air_qlty",""));
         suggestionText.setText("   "+prefs.getString("suggestion",""));
 
         weatherInfoLayout.setVisibility(View.VISIBLE);

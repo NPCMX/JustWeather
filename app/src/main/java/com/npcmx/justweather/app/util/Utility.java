@@ -107,7 +107,6 @@ public class Utility {
             JSONObject jsonObject = jsonArray.getJSONObject(0);
 
             JSONArray jsonArrayDaily = jsonObject.getJSONArray("daily_forecast");
-
             JSONObject jsonObjecDate = jsonArrayDaily.getJSONObject(0);
 
             JSONObject jsonObjectDesp = jsonObjecDate.getJSONObject("cond");
@@ -117,6 +116,11 @@ public class Utility {
             JSONObject jsonObjectTmp = jsonObjecDate.getJSONObject("tmp");
             String minTemp = jsonObjectTmp.getString("min");
             String maxTemp = jsonObjectTmp.getString("max");
+
+            JSONObject jsonObjectAqi = jsonObject.getJSONObject("aqi");
+            JSONObject jsonObjectAqiX = jsonObjectAqi.getJSONObject("city");
+            String airAqi = jsonObjectAqiX.getString("aqi");
+            String airQlty = jsonObjectAqiX.getString("qlty");
 
             JSONObject jsonObjectCity = jsonObject.getJSONObject("basic");
             String cityName = jsonObjectCity.getString("city");
@@ -142,7 +146,7 @@ public class Utility {
                     +","+jsonObjectSug3.getString("txt");
 
             saveWeatherInfo(context,cityName,weatherCode,minTemp,maxTemp,weatherDespDay,weatherDespNig,
-                    publishTime,nowTem,nowHum,suggestion);
+                    publishTime,nowTem,nowHum,suggestion,airAqi,airQlty);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -154,7 +158,7 @@ public class Utility {
      * */
     public static void saveWeatherInfo(Context context,String cityName,String weatherCode,String minTemp,
                                        String maxTemp,String weatherDespDay,String weatherDespNig,String publishTime,
-                                        String nowTem,String nowHum,String suggestion){
+                                        String nowTem,String nowHum,String suggestion,String airAqi,String airQlty){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日", Locale.CHINA);
 
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
@@ -169,6 +173,8 @@ public class Utility {
         editor.putString("current_date",sdf.format(new Date()));
         editor.putString("now_temp",nowTem);
         editor.putString("now_Hum",nowHum);
+        editor.putString("air_aqi",airAqi);
+        editor.putString("air_qlty",airQlty);
         editor.putString("suggestion",suggestion);
         editor.commit();
     }

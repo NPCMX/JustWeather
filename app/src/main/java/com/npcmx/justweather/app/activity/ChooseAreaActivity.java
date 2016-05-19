@@ -186,7 +186,7 @@ public class ChooseAreaActivity extends Activity {
     private void showProgressDialog(){
         if (progressDialog == null){
             progressDialog = new ProgressDialog(this);
-            progressDialog.setMessage("Loading....");
+            progressDialog.setMessage("首次加载时间较长，抱歉......");
             progressDialog.setCanceledOnTouchOutside(false);
         }
         progressDialog.show();

@@ -52,6 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
+            android:typeface="serif"
             android:textColor="#fff"
             android:textSize="16sp"
             />
@@ -80,6 +81,7 @@
                     android:id="@+id/now_tem"
                     android:textColor="#fff"
                     android:layout_marginLeft="35dp"
+                    android:typeface="serif"
                     android:textSize="30dp"
                     />
             </TableRow>
@@ -98,6 +100,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="2"
                     android:textColor="#fff"
+                    android:typeface="serif"
                     android:layout_marginLeft="35dp"
                     android:textSize="20dp"
                     />
@@ -117,6 +120,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="2"
                     android:textColor="#fff"
+                    android:typeface="serif"
                     android:layout_marginLeft="35dp"
                     android:textSize="20dp"
                     />
@@ -136,6 +140,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="2"
                     android:textColor="#fff"
+                    android:typeface="serif"
                     android:layout_marginLeft="35dp"
                     android:textSize="20dp"
                     />
@@ -149,15 +154,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:layout_below="@id/weather_info_layout"
             android:background="#757575">
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp"
                 android:textColor="#fff"
+                android:typeface="serif"
                 android:textSize="16sp"
                 android:text="Day-Night"
                 />
@@ -174,7 +180,7 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:layout_gravity="center_horizontal"
                 android:orientation="horizontal">
 
@@ -184,6 +190,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:textColor="#FFF"
+                    android:typeface="serif"
                     android:textSize="30sp"
                     />
 
@@ -202,6 +209,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:typeface="serif"
                     android:textColor="#FFF"
                     android:textSize="30sp"
                     />
@@ -230,6 +238,7 @@
                 android:id="@+id/suggest_text_view"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="300dp"
+                android:typeface="serif"
                 android:layout_height="126dp"
                 android:scrollbars="vertical"
                 android:singleLine="false"

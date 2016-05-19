@@ -64,39 +64,6 @@ public class Utility {
         return false;
     }
 
-
-//    public synchronized static boolean handleCityListResponse(JustWeatherDB justWeatherDB,String response) {
-//        if (response != null) {
-//            try {
-//
-//                JSONObject jsonObject1 = new JSONObject(response);
-//                JSONArray jsonArray = jsonObject1.getJSONArray("city_info");
-//                Set<String> set = new HashSet<>();
-//                for (int i = 0; i <= jsonArray.length(); i++) {
-//                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-//                    String id = jsonObject.getString("id");
-//                    String cityName = jsonObject.getString("city");
-//                    String provName = jsonObject.getString("prov");
-//                    Province province = new Province();
-//                    City city = new City();
-//                    if (!set.contains(provName)) {
-//                        province.setProvinceName(provName);
-//                        set.add(provName);
-//                        justWeatherDB.saveProvince(province);
-//                    }
-//                    city.setCityCode(id);
-//                    city.setCityName(cityName);
-//                    city.setProvinceName(provName);
-//                    justWeatherDB.saveCity(city);
-//            }
-//               return true;
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        return false;
-//    }
-
     /**
      * 解析服务器返回的天气JSON数据，并保存到本地
      * */
@@ -116,11 +83,14 @@ public class Utility {
             JSONObject jsonObjectTmp = jsonObjecDate.getJSONObject("tmp");
             String minTemp = jsonObjectTmp.getString("min");
             String maxTemp = jsonObjectTmp.getString("max");
-
-            JSONObject jsonObjectAqi = jsonObject.getJSONObject("aqi");
-            JSONObject jsonObjectAqiX = jsonObjectAqi.getJSONObject("city");
-            String airAqi = jsonObjectAqiX.getString("aqi");
-            String airQlty = jsonObjectAqiX.getString("qlty");
+            String airAqi = "--";
+            String airQlty = "--";
+            if (!jsonObject.isNull("aqi")){
+                JSONObject jsonObjectAqi = jsonObject.getJSONObject("aqi");
+                JSONObject jsonObjectAqiX = jsonObjectAqi.getJSONObject("city");
+                if (!jsonObjectAqiX.isNull("aqi")){airAqi = jsonObjectAqiX.getString("aqi");}
+                if (!jsonObjectAqiX.isNull("qlty")){airQlty = jsonObjectAqiX.getString("qlty");}
+            }
 
             JSONObject jsonObjectCity = jsonObject.getJSONObject("basic");
             String cityName = jsonObjectCity.getString("city");
@@ -129,21 +99,26 @@ public class Utility {
             JSONObject jsonObjectPublish = jsonObjectCity.getJSONObject("update");
             String publishTime = jsonObjectPublish.getString("loc");
 
+
             JSONObject jsonObjectNow = jsonObject.getJSONObject("now");
 //            JSONObject jsonObjectNew = jsonObjectNow.getJSONObject("cond");
             String nowTem = jsonObjectNow.getString("tmp");
 //            String nowFeel = jsonObjectNew.getString("fl");
             String nowHum = jsonObjectNow.getString("hum");
 
-            JSONObject jsonObjectSug = jsonObject.getJSONObject("suggestion");
-            JSONObject jsonObjectSug1 = jsonObjectSug.getJSONObject("comf");
-            JSONObject jsonObjectSug2 = jsonObjectSug.getJSONObject("drsg");
-            JSONObject jsonObjectSug3 = jsonObjectSug.getJSONObject("uv");
-            String suggestion = "  今天天气"+jsonObjectSug1.getString("brf")
-                    +","+jsonObjectSug1.getString("txt")
-                    +","+jsonObjectSug2.getString("txt")
-                    +"\n\n    紫外线强度"+jsonObjectSug3.getString("brf")
-                    +","+jsonObjectSug3.getString("txt");
+            String suggestion = "该地区暂时不支持此功能，抱歉！";
+            if (!jsonObject.isNull("suggestion")){
+                JSONObject jsonObjectSug = jsonObject.getJSONObject("suggestion");
+                JSONObject jsonObjectSug1 = jsonObjectSug.getJSONObject("comf");
+                JSONObject jsonObjectSug2 = jsonObjectSug.getJSONObject("drsg");
+                JSONObject jsonObjectSug3 = jsonObjectSug.getJSONObject("uv");
+                suggestion = "  今天天气"+jsonObjectSug1.getString("brf")
+                        +","+jsonObjectSug1.getString("txt")
+                        +","+jsonObjectSug2.getString("txt")
+                        +"\n\n    紫外线强度"+jsonObjectSug3.getString("brf")
+                        +","+jsonObjectSug3.getString("txt");
+            }
+
 
             saveWeatherInfo(context,cityName,weatherCode,minTemp,maxTemp,weatherDespDay,weatherDespNig,
                     publishTime,nowTem,nowHum,suggestion,airAqi,airQlty);
